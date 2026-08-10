@@ -1,74 +1,105 @@
-# Backend Laravel 13 — Portfolio Company
+# Company Portfolio Backend API (Laravel 13)
 
-## Struktur
+Sistem backend RESTful API untuk aplikasi Web Portofolio Perusahaan (*Company Portfolio*). Dibuat menggunakan **Laravel 13**, dilengkapi fitur autentikasi API via **Sanctum**, manajemen Kategori, serta CRUD Artikel lengkap dengan fitur auto-slug, filter status, dan upload media.
+
+---
+
+## Struktur File Backend
+
+```text
+app/
+├── Http/
+│   ├── Controllers/Api/  -> CategoryController, ArticleController
+│   ├── Requests/         -> Form Request validasi (Store & Update)
+│   └── Resources/        -> API Resource (JSON response)
+└── Models/               -> User, Category, Article (dengan relasi)
+database/
+└── migrations/           -> Migrasi tabel: users, categories, articles
+routes/
+└── api.php               -> Endpoint API
 ```
-database/migrations/   -> 3 migration: users, categories, articles
-app/Models/             -> User, Category, Article (dengan relasi)
-app/Http/Requests/      -> Form Request validasi (Store & Update)
-app/Http/Resources/     -> API Resource (JSON response)
-app/Http/Controllers/Api/ -> CategoryController, ArticleController
-routes/api.php          -> Route API
+
+---
+
+## Panduan Setup (Untuk yang Mengklon Project)
+
+Jika Anda mengklon (*clone*) repositori ini, ikuti langkah-langkah berikut untuk menjalankan proyek di lingkungan lokal:
+
+### 1. Clone Repositori
+```bash
+git clone https://github.com/GoldenSinapsis/itena-webPorto.git
+cd itena-webPorto
 ```
 
-## Cara pasang
-1. Salin folder `app`, `database`, `routes` ke root project Laravel 13 Anda
-   (timpa file yang sama jika ditanya, khususnya `routes/api.php`).
-2. Jika project belum punya `routes/api.php` terdaftar, pastikan di
-   `bootstrap/app.php` route api sudah di-load:
-   ```php
-   ->withRouting(
-       web: __DIR__.'/../routes/web.php',
-       api: __DIR__.'/../routes/api.php',
-       ...
-   )
-   ```
-3. Install Sanctum untuk autentikasi (dipakai di `auth:sanctum` middleware):
-   ```bash
-   composer require laravel/sanctum
-   php artisan install:api
-   ```
-4. Buat symlink storage untuk upload gambar:
-   ```bash
-   php artisan storage:link
-   ```
-5. Jalankan migration:
-   ```bash
-   php artisan migrate
-   ```
+### 2. Install Dependensi PHP
+```bash
+composer install
+```
 
-## Endpoint yang tersedia
+### 3. Konfigurasi Environment (`.env`)
+Salin file `.env.example` menjadi `.env`:
+```bash
+cp .env.example .env
+```
+Buka file `.env` dan sesuaikan pengaturan database Anda:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=itena
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-### Publik (tanpa login)
-| Method | Endpoint                  | Keterangan                          |
-|--------|----------------------------|--------------------------------------|
-| GET    | /api/categories             | List kategori (+search, pagination) |
-| GET    | /api/categories/{slug}      | Detail kategori                     |
-| GET    | /api/articles                | List artikel (+filter status/category/search) |
-| GET    | /api/articles/{slug}         | Detail artikel (otomatis +1 views)  |
+### 4. Generate Key & Link Storage
+Jalankan perintah ini untuk membuat *app key* dan menyambungkan folder penyimpanan gambar:
+```bash
+php artisan key:generate
+php artisan storage:link
+```
 
-### Perlu login (Bearer token Sanctum)
-| Method | Endpoint              |
-|--------|------------------------|
-| POST   | /api/categories        |
-| PUT    | /api/categories/{id}   |
-| DELETE | /api/categories/{id}   |
-| POST   | /api/articles           |
-| PUT    | /api/articles/{id}      |
-| DELETE | /api/articles/{id}      |
+### 5. Jalankan Migrasi Database
+```bash
+php artisan migrate
+```
 
-## Catatan penting
-- Kolom `email` pada tabel `users` dibuat **unique** (tidak eksplisit di DDL
-  Anda, tapi wajib secara praktik untuk sistem login).
-- `slug` pada `categories` dan `articles` dibuat **unique**, dan otomatis
-  di-generate dari `name` bila tidak dikirim oleh client (lihat
-  `prepareForValidation()` di masing-masing Form Request).
-- Upload `image` & `sub_image` disimpan di disk `public`
-  (`storage/app/public/articles/...`), field di database tetap `VARCHAR`
-  path relatif — sesuai DDL.
-- `user_id` pada artikel **tidak diambil dari input client**, melainkan
-  otomatis dari `auth()->user()->id` saat create, demi keamanan.
-- Route model binding artikel & kategori memakai `slug` (bukan `id`),
-  cocok untuk URL SEO-friendly seperti `/api/articles/judul-artikel-saya`.
-- Jika ingin otorisasi berbasis role (admin/editor/author), tambahkan
-  Policy/Middleware terpisah — saat ini `authorize()` di Request masih
-  `return true` (hanya cek login, bukan role).
+### 6. Jalankan Server
+```bash
+php artisan serve
+```
+Aplikasi backend akan berjalan di `http://127.0.0.1:8000`.
+
+---
+
+## 🌐 Endpoint API
+
+### 🔓 Publik (Tanpa Autentikasi)
+
+| Method | Endpoint | Keterangan |
+| :--- | :--- | :--- |
+| `GET` | `/api/categories` | List kategori (+search, pagination) |
+| `GET` | `/api/categories/{slug}` | Detail kategori berdasarkan slug |
+| `GET` | `/api/articles` | List artikel (+filter status, category, search) |
+| `GET` | `/api/articles/{slug}` | Detail artikel berdasarkan slug (otomatis +1 views) |
+
+### 🔒 Perlu Login (Bearer Token Sanctum)
+
+> Tambahkan Header pada request: `Authorization: Bearer <TOKEN_ANDA>`
+
+| Method | Endpoint | Keterangan |
+| :--- | :--- | :--- |
+| `POST` | `/api/categories` | Membuat kategori baru |
+| `PUT` | `/api/categories/{id}` | Memperbarui data kategori |
+| `DELETE` | `/api/categories/{id}` | Menghapus kategori |
+| `POST` | `/api/articles` | Membuat artikel baru (support upload `image` & `sub_image`) |
+| `PUT` | `/api/articles/{id}` | Memperbarui artikel |
+| `DELETE` | `/api/articles/{id}` | Menghapus artikel beserta berkas gambar |
+
+---
+
+## 📝 Catatan Penting
+- Kolom `email` pada tabel `users` dibuat **unique** untuk keperluan sistem autentikasi.
+- `slug` pada `categories` dan `articles` bersifat **unique** dan dibuat otomatis dari kolom `name` jika tidak diisi oleh client.
+- Upload `image` & `sub_image` disimpan pada disk `public` (`storage/app/public/articles/`).
+- `user_id` pada artikel diisi secara otomatis dari ID pengguna yang sedang login (`auth()->user()->id`) demi keamanan.
+- Route model binding artikel & kategori menggunakan `slug` untuk mendukung URL SEO-friendly.
