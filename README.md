@@ -1,105 +1,94 @@
-# Company Portfolio Backend API (Laravel 13)
+# Company Portfolio Backend
 
-Sistem backend RESTful API untuk aplikasi Web Portofolio Perusahaan (*Company Portfolio*). Dibuat menggunakan **Laravel 13**, dilengkapi fitur autentikasi API via **Sanctum**, manajemen Kategori, serta CRUD Artikel lengkap dengan fitur auto-slug, filter status, dan upload media.
+Web portal & REST API untuk portofolio perusahaan. Dibuat menggunakan Laravel 13, Tailwind CSS, dan Laravel Sanctum untuk manajemen autentikasi.
 
 ---
 
-## Struktur File Backend
+## Technical Stack
+- Framework: Laravel 13
+- Database: MySQL
+- Auth: Laravel Sanctum / Session Auth
+- Frontend: Blade Templates + Tailwind CSS
+
+---
+
+## Directory Overview
 
 ```text
 app/
 ├── Http/
-│   ├── Controllers/Api/  -> CategoryController, ArticleController
-│   ├── Requests/         -> Form Request validasi (Store & Update)
-│   └── Resources/        -> API Resource (JSON response)
-└── Models/               -> User, Category, Article (dengan relasi)
-database/
-└── migrations/           -> Migrasi tabel: users, categories, articles
-routes/
-└── api.php               -> Endpoint API
+│   ├── Controllers/
+│   │   ├── Admin/         # CategoryController, ArticleController, DashboardController
+│   │   └── PortfolioController.php
+│   ├── Requests/          # Validasi Form Request (Store/Update)
+│   └── Resources/         # API Resource Response
+└── Models/                # User, Category, Article
+
+resources/views/
+├── layouts/               # Base layout (app.blade.php & admin.blade.php)
+├── pages/                 # Halaman publik (home, article, pricing, contact)
+└── admin/                 # Management views (categories, articles, dashboard)
 ```
 
 ---
 
-## Panduan Setup (Untuk yang Mengklon Project)
+## Installation & Setup
 
-Jika Anda mengklon (*clone*) repositori ini, ikuti langkah-langkah berikut untuk menjalankan proyek di lingkungan lokal:
+Jika kamu mengklon proyek ini, ikuti langkah berikut untuk menjalankan di server lokal:
 
-### 1. Clone Repositori
-```bash
-git clone https://github.com/GoldenSinapsis/itena-webPorto.git
-cd itena-webPorto
-```
+1. **Clone repository & masuk folder proyek:**
+   ```bash
+   git clone https://github.com/GoldenSinapsis/itena-webPorto.git
+   cd itena-webPorto
+   ```
 
-### 2. Install Dependensi PHP
-```bash
-composer install
-```
+2. **Install PHP dependencies:**
+   ```bash
+   composer install
+   ```
 
-### 3. Konfigurasi Environment (`.env`)
-Salin file `.env.example` menjadi `.env`:
-```bash
-cp .env.example .env
-```
-Buka file `.env` dan sesuaikan pengaturan database Anda:
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=itena
-DB_USERNAME=root
-DB_PASSWORD=
-```
+3. **Setup environment file:**
+   ```bash
+   cp .env.example .env
+   ```
+   Sesuaikan konfigurasi koneksi database MySQL pada file `.env`.
 
-### 4. Generate Key & Link Storage
-Jalankan perintah ini untuk membuat *app key* dan menyambungkan folder penyimpanan gambar:
-```bash
-php artisan key:generate
-php artisan storage:link
-```
+4. **Generate app key & storage link:**
+   ```bash
+   php artisan key:generate
+   php artisan storage:link
+   ```
 
-### 5. Jalankan Migrasi Database
-```bash
-php artisan migrate
-```
+5. **Jalankan database migration:**
+   ```bash
+   php artisan migrate
+   ```
 
-### 6. Jalankan Server
-```bash
-php artisan serve
-```
-Aplikasi backend akan berjalan di `http://127.0.0.1:8000`.
+6. **Jalankan development server:**
+   ```bash
+   php artisan serve
+   ```
+   Aplikasi dapat diakses via browser di `http://127.0.0.1:8000`.
 
 ---
 
-## 🌐 Endpoint API
+## Route Overview
 
-### 🔓 Publik (Tanpa Autentikasi)
+### Frontend Publik
+- `GET /` — Landing page (`pages.home`)
+- `GET /article` — Daftar artikel / portofolio (`pages.article`)
+- `GET /article/{slug}` — Detail artikel berdasarkan slug
+- `GET /pricing` — Halaman daftar harga (`pages.pricing`)
+- `GET /contact` — Halaman kontak (`pages.contact`)
 
-| Method | Endpoint | Keterangan |
-| :--- | :--- | :--- |
-| `GET` | `/api/categories` | List kategori (+search, pagination) |
-| `GET` | `/api/categories/{slug}` | Detail kategori berdasarkan slug |
-| `GET` | `/api/articles` | List artikel (+filter status, category, search) |
-| `GET` | `/api/articles/{slug}` | Detail artikel berdasarkan slug (otomatis +1 views) |
-
-### 🔒 Perlu Login (Bearer Token Sanctum)
-
-> Tambahkan Header pada request: `Authorization: Bearer <TOKEN_ANDA>`
-
-| Method | Endpoint | Keterangan |
-| :--- | :--- | :--- |
-| `POST` | `/api/categories` | Membuat kategori baru |
-| `PUT` | `/api/categories/{id}` | Memperbarui data kategori |
-| `DELETE` | `/api/categories/{id}` | Menghapus kategori |
-| `POST` | `/api/articles` | Membuat artikel baru (support upload `image` & `sub_image`) |
-| `PUT` | `/api/articles/{id}` | Memperbarui artikel |
-| `DELETE` | `/api/articles/{id}` | Menghapus artikel beserta berkas gambar |
+### Admin Dashboard (Protected `auth`)
+- `GET /admin` — Main dashboard Overview
+- `RESOURCE /admin/categories` — CRUD Kategori
+- `RESOURCE /admin/articles` — CRUD Artikel (support image upload & auto-slug)
 
 ---
 
-## 📝 Catatan Penting
-- Kolom `email` pada tabel `users` dibuat **unique** untuk keperluan sistem autentikasi.
-- `slug` pada `categories` dan `articles` bersifat **unique** dan dibuat otomatis dari kolom `name` jika tidak diisi oleh client.
-- Upload `image` & `sub_image` disimpan pada disk `public` (`storage/app/public/articles/`).
-- `user_id` pada artikel diisi secara otomatis dari ID pengguna yang sedang login (`auth()->user()->id`) demi keamanan.
-- Route model binding artikel & kategori menggunakan `slug` untuk mendukung URL SEO-friendly.
+## Notes
+- Upload berkas gambar disimpan di disk `public` (`storage/app/public/articles/`).
+- Pembuatan `slug` artikel dan kategori ditangani secara otomatis dari kolom `name` / `title`.
+- `user_id` pada pembuat artikel diambil dari ID user yang sedang aktif login (`auth()->user()->id`).
