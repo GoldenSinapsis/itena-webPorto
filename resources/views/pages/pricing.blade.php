@@ -59,7 +59,7 @@
             <p class="mt-4 text-sm font-semibold text-slate-900">What you will get:</p>
             <ul class="mt-3 space-y-2.5 text-sm text-slate-600 flex-1">
                 <li class="flex gap-2"><span class="text-ineta-gold">•</span> Multi-page, 5–7 pages: Home, About, Services, Contact, etc.</li>
-                <li class="flex gap-2"><span class="text-ineta-gold">•</span> Admin dashboard with 2–3 CRUD for Article, News, Form, etc.</li>
+                <li class="flex gap-2"><span class="text-ineta-gold">•</span> Admin dashboard with 2–3 CRUD for articles, News, Form, etc.</li>
                 <li class="flex gap-2"><span class="text-ineta-gold">•</span> Fitur autentikasi Login &amp; Register</li>
                 <li class="flex gap-2"><span class="text-ineta-gold">•</span> Email terhubung dengan Mailhog / SMTP</li>
                 <li class="flex gap-2"><span class="text-ineta-gold">•</span> SEO-friendly URL</li>

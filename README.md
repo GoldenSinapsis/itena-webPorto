@@ -18,15 +18,15 @@ Web portal & REST API untuk portofolio perusahaan. Dibuat menggunakan Laravel 13
 app/
 ├── Http/
 │   ├── Controllers/
-│   │   ├── Admin/         # CategoryController, ArticleController, DashboardController
+│   │   ├── Admin/         # CategoryController, articlesController, DashboardController
 │   │   └── PortfolioController.php
 │   ├── Requests/          # Validasi Form Request (Store/Update)
 │   └── Resources/         # API Resource Response
-└── Models/                # User, Category, Article
+└── Models/                # User, Category, articles
 
 resources/views/
 ├── layouts/               # Base layout (app.blade.php & admin.blade.php)
-├── pages/                 # Halaman publik (home, article, pricing, contact)
+├── pages/                 # Halaman publik (home, articles, pricing, contact)
 └── admin/                 # Management views (categories, articles, dashboard)
 ```
 
@@ -76,8 +76,8 @@ Jika kamu mengklon proyek ini, ikuti langkah berikut untuk menjalankan di server
 
 ### Frontend Publik
 - `GET /` — Landing page (`pages.home`)
-- `GET /article` — Daftar artikel / portofolio (`pages.article`)
-- `GET /article/{slug}` — Detail artikel berdasarkan slug
+- `GET /articles` — Daftar artikel / portofolio (`pages.articles`)
+- `GET /articles/{slug}` — Detail artikel berdasarkan slug
 - `GET /pricing` — Halaman daftar harga (`pages.pricing`)
 - `GET /contact` — Halaman kontak (`pages.contact`)
 

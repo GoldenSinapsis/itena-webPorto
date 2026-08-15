@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Article;
+namespace App\Http\Requests\articles;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class UpdateArticleRequest extends FormRequest
+class UpdatearticlesRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -31,7 +31,6 @@ class UpdateArticleRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'sub_description' => ['nullable', 'string'],
             'status' => ['nullable', 'in:draft,published,archived'],
-
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'sub_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];

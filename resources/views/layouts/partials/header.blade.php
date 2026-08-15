@@ -12,7 +12,7 @@
                         'Home' => ['url' => url('/'), 'pattern' => '/'],
                         'About Us' => ['url' => url('/tentang-kami'), 'pattern' => 'tentang-kami'],
                         'Projects' => ['url' => url('/projects'), 'pattern' => 'projects'],
-                        'Article' => ['url' => url('/article'), 'pattern' => 'article'],
+                        'articles' => ['url' => url('/articles'), 'pattern' => 'articles'],
                         'Pricing' => ['url' => url('/harga'), 'pattern' => 'harga'],
                         'Contact' => ['url' => url('/hubungi-kami'), 'pattern' => 'hubungi-kami'],
                     ];

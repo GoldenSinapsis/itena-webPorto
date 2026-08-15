@@ -20,6 +20,7 @@ class Category extends Model
      */
     public function articles(): HasMany
     {
+        // ✅ DIBETULKAN: Menggunakan Article::class (PascalCase & singular)
         return $this->hasMany(Article::class);
     }
 

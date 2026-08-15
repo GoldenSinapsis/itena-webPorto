@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Article;
+use App\Models\Article; // Fixed: Article (PascalCase)
 use App\Models\Category;
 use Illuminate\View\View;
 
@@ -18,11 +18,11 @@ class DashboardController extends Controller
             'total_categories' => Category::count(),
         ];
 
-        $recentArticles = Article::with(['user', 'category'])
+        $recentarticles = Article::with(['user', 'category'])
             ->latest()
             ->take(5)
             ->get();
 
-        return view('admin.dashboard', compact('stats', 'recentArticles'));
+        return view('admin.dashboard', compact('stats', 'recentarticles'));
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Article\StoreArticleRequest;
-use App\Http\Requests\Article\UpdateArticleRequest;
+use App\Http\Requests\articles\StorearticlesRequest;
+use App\Http\Requests\articles\UpdatearticlesRequest;
 use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
@@ -47,7 +47,7 @@ class ArticleController extends Controller
     /**
      * POST /admin/articles
      */
-    public function store(StoreArticleRequest $request): RedirectResponse
+    public function store(StorearticlesRequest $request): RedirectResponse
     {
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
@@ -80,7 +80,7 @@ class ArticleController extends Controller
     /**
      * PUT/PATCH /admin/articles/{article}
      */
-    public function update(UpdateArticleRequest $request, Article $article): RedirectResponse
+    public function update(UpdatearticlesRequest $request, Article $article): RedirectResponse
     {
         $data = $request->validated();
 

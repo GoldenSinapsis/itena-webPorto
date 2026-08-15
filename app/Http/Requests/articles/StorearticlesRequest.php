@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Article;
+namespace App\Http\Requests\articles;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class StoreArticleRequest extends FormRequest
+class StorearticlesRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Hanya user yang sudah login (author/editor/admin) yang boleh membuat artikel.
         return $this->user() !== null;
     }
 
@@ -22,17 +21,11 @@ class StoreArticleRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'sub_description' => ['nullable', 'string'],
             'status' => ['nullable', 'in:draft,published,archived'],
-
-            // Untuk upload file gambar (opsional, sesuaikan bila image dikirim sebagai path/string)
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'sub_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 
-    /**
-     * user_id diambil dari user yang sedang login, bukan dari input client,
-     * dan slug otomatis dibuat dari name jika kosong.
-     */
     protected function prepareForValidation(): void
     {
         $merge = [];

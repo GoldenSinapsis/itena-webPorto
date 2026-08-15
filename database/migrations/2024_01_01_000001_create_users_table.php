@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('role', ['admin', 'editor', 'author'])
                 ->nullable()
                 ->default('author');
+            $table->rememberToken(); // <-- TAMBAHKAN BARIS INI
             $table->timestamps();
         });
     }
