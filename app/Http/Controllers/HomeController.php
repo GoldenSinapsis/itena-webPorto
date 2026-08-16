@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\articles;
+use App\Models\Article; // ✅ Ganti dari articles menjadi Article
 use App\Models\Category;
 use Illuminate\View\View;
 
@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function home(): View
     {
-        $articles = articles::query()
+        $articles = Article::query() // ✅ Ganti articles:: menjadi Article::
             ->published()
             ->with('category')
             ->latest()

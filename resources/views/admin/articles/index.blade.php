@@ -157,15 +157,15 @@
                                                         <a href="{{ route('articles.show', $article->slug) }}" target="_blank" class="btn btn-secondary" title="Lihat">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="{{ route('admin.articles.edit', $article->id) }}" class="btn btn-info" title="Edit">
+                                                        <a href="{{ route('admin.articles.edit', $article->slug) }}" class="btn btn-info" title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <button type="button" class="btn btn-danger" title="Hapus" data-toggle="modal" data-target="#deleteModal{{ $article->id }}">
+                                                        <button type="button" class="btn btn-danger" title="Hapus" data-toggle="modal" data-target="#deleteModal{{ $article->slug }}">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </div>
 
-                                                    <div class="modal fade" id="deleteModal{{ $article->id }}" tabindex="-1">
+                                                    <div class="modal fade" id="deleteModal{{ $article->slug }}" tabindex="-1">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -180,7 +180,7 @@
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                                                                    <form action="{{ route('admin.articles.destroy', $article->id) }}" method="POST">
+                                                                    <form action="{{ route('admin.articles.destroy', $article->slug) }}" method="POST">
                                                                         @csrf
                                                                         @method('DELETE')
                                                                         <button type="submit" class="btn btn-danger">Ya, Hapus</button>
